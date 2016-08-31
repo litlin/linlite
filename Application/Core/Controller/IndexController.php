@@ -28,10 +28,11 @@ class IndexController {
 <MsgType><![CDATA[text]]></MsgType>
 <Content><![CDATA[%s]]></Content>
 </xml>";
-					echo printf ( $tpl, $fromUser, $toUser, time (), $contentStr );
+					echo sprintf( $tpl, $fromUser, $toUser, time (), $contentStr );
+					die();
 				}
 			}
-			echo "";
+			echo "";die();
 		}
 	}
 	private function valid() {
