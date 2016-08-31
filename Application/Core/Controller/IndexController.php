@@ -11,7 +11,27 @@ class IndexController {
 		} elseif ($_GET ['echostr']) {
 			$this->valid ();
 		} else {
-			ResponseMsg::response ();
+			// ResponseMsg::response ();
+			
+			$postStr = file_get_contents ( 'php://input' );
+			if (! empty ( $postStr )) {
+				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+				if ($postObj !== false) {
+					$msgType = $postObj->MsgType;
+					$fromUser = $postObj->FromUserName;
+					$toUser = $postObj->ToUserName;
+					$contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
+					$tpl = "<xml>
+<ToUserName><![CDATA[%s]]></ToUserName>
+<FromUserName><![CDATA[%s]]></FromUserName>
+<CreateTime>%s</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[%s]]></Content>
+</xml>";
+					echo printf ( $tpl, $fromUser, $toUser, time (), $contentStr );
+				}
+			}
+			echo "";
 		}
 	}
 	private function valid() {
