@@ -36,7 +36,7 @@ class IndexController {
 	}
 	private function valid() {
 		$echoStr = $_GET ["echostr"];
-		if (self::checkSignature ()) {
+		if ($this->checkSignature()) {
 			echo $echoStr;
 			die ();
 		}
