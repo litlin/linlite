@@ -28,16 +28,17 @@ class IndexController {
 <MsgType><![CDATA[text]]></MsgType>
 <Content><![CDATA[%s]]></Content>
 </xml>";
-					echo sprintf( $tpl, $fromUser, $toUser, time (), $contentStr );
-					die();
+					$resultStr = sprintf ( $tpl, $fromUser, $toUser, time (), $contentStr );
+					echo $resultStr;
 				}
 			}
-			echo "";die();
+			echo "";
+			die ();
 		}
 	}
 	private function valid() {
 		$echoStr = $_GET ["echostr"];
-		if ($this->checkSignature()) {
+		if ($this->checkSignature ()) {
 			echo $echoStr;
 			die ();
 		}
