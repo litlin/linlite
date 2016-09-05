@@ -9,5 +9,5 @@ include_once __DIR__ . '/autoloader.php';
 
 // ini_set("display_error", "on");
 
-new IndexController ();
+(new IndexController ())->go ();
 

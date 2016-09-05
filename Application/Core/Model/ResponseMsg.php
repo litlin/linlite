@@ -3,7 +3,7 @@
 namespace linlite\Core\Model;
 
 class ResponseMsg {
-	public static function response(\SimpleXMLElement $postObj) {
+	public  function response(\SimpleXMLElement $postObj) {
 		$msgType = $postObj->MsgType;
 		$fromUser = $postObj->FromUserName;
 		$toUser = $postObj->ToUserName;
@@ -34,7 +34,7 @@ class ResponseMsg {
 						$contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
 						break;
 					case preg_match ( "/[\x{4e00}-\x{9fa5}]{2,3}(?=图片|图文)/u", $keyWord ) :
-						$resultStr = sprintf ( self::getTpl ( "news", 1 ), $fromUser, $toUser, time (), "描述信息", "测试图文格式--标题", "测试链接为必应中国网址", "http://mmbiz.qpic.cn/mmbiz/LhuPjPp9Ry8yeKvmr6AqLCagF0vVKAuhe9cvKibY0Xw78WNficH84fou6HD5V8khgct6dp3ibSJbLVViba6LXugZRg/0", "http://cn.bing.com" );
+						$resultStr = sprintf ( $this->getTpl ( "news", 1 ), $fromUser, $toUser, time (), "描述信息", "测试图文格式--标题", "测试链接为必应中国网址", "http://mmbiz.qpic.cn/mmbiz/LhuPjPp9Ry8yeKvmr6AqLCagF0vVKAuhe9cvKibY0Xw78WNficH84fou6HD5V8khgct6dp3ibSJbLVViba6LXugZRg/0", "http://cn.bing.com" );
 						break;
 					case preg_match ( "/^[\x{4e00}-\x{9fa5}]{0,2}(?=音乐$|music$)/u", $keyWord ) :
 						$title = "Shatter Me";
@@ -44,7 +44,7 @@ class ResponseMsg {
 						preg_match ( '/^Location:\s(https?.*)$/m', $html, $match );
 						$musicUrl = $match [1];
 						$HQMusicUrl = $musicUrl;
-						$resultStr = sprintf ( self::getTpl ( "music" ), $fromUser, $toUser, time (), $title, $description, $musicUrl, $HQMusicUrl );
+						$resultStr = sprintf ( $this->getTpl ( "music" ), $fromUser, $toUser, time (), $title, $description, $musicUrl, $HQMusicUrl );
 						break;
 					case preg_match ( '/^添加按钮$/u', $keyWord ) :
 						$url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" . AccessToken::getAccessToken ();
@@ -85,12 +85,12 @@ class ResponseMsg {
 				}
 				break;
 		}
-		if (! $resultStr) {
-			$resultStr = sprintf ( self::getTpl (), $fromUser, $toUser, time (), $contentStr );
+		if (!isset( $resultStr)) {
+			$resultStr = sprintf ( $this->getTpl ("text"), $fromUser, $toUser, time (), $contentStr );
 		}
 		echo $resultStr;
 	}
-	private static function getTpl($msgType = "", $ArticleCount = 1) {
+	private  function getTpl($msgType = "", $ArticleCount = 1) {
 		$msgType = strtolower ( $msgType );
 		$tpl = "";
 		switch ($msgType) {

@@ -5,7 +5,7 @@ namespace linlite\Core\Controller;
 use linlite\Core\Model\ResponseMsg;
 
 class IndexController {
-	public function __construct() {
+	public function go() {
 		if (empty ( $_GET ['echostr'] ) && empty ( $_POST )) {
 			echo "welcome!";
 		} elseif (isset ( $_GET ['echostr'] )) {
@@ -15,10 +15,11 @@ class IndexController {
 			try {
 				$postStr = file_get_contents ( 'php://input' );
 				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
-				ResponseMsg::response ( $postObj );
+				$respon = new ResponseMsg();
+				$respon->response($postObj);
 			} catch ( \Exception $e ) {
 				echo "";
-				die ();
+				exit();
 			}
 			
 			// $postStr = file_get_contents ( 'php://input' );
