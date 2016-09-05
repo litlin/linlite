@@ -11,7 +11,15 @@ class IndexController {
 		} elseif (isset ( $_GET ['echostr'] )) {
 			$this->valid ();
 		} else {
-			ResponseMsg::response ();
+			
+			try {
+				$postStr = file_get_contents ( 'php://input' );
+				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+				ResponseMsg::response ( $postObj );
+			} catch ( \Exception $e ) {
+				echo "";
+				die ();
+			}
 			
 			// $postStr = file_get_contents ( 'php://input' );
 			// if (! empty ( $postStr )) {
