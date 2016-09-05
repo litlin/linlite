@@ -8,7 +8,7 @@ class IndexController {
 	public function __construct() {
 		if (empty ( $_GET ['echostr'] ) && empty ( $_POST )) {
 			echo "welcome!";
-		} elseif ($_GET ['echostr']) {
+		} elseif (isset ( $_GET ['echostr'] )) {
 			$this->valid ();
 		} else {
 			ResponseMsg::response ();
