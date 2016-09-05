@@ -90,7 +90,10 @@ class ResponseMsg {
 						}
 						break;
 				}
-				echo $resultStr ? $resultStr : sprintf ( self::getTpl (), $fromUser, $toUser, time (), $contentStr );
+				if (! $resultStr) {
+					$resultStr = sprintf ( self::getTpl (), $fromUser, $toUser, time (), $contentStr );
+				}
+				echo $resultStr;
 			}
 		} else {
 			echo "";
@@ -236,13 +239,22 @@ Url 	否 	点击图文消息跳转链接
 			case "text" :
 			default :
 				$tpl = "<xml>
-						<ToUserName><![CDATA[%s]]></ToUserName>
-						<FromUserName><![CDATA[%s]]></FromUserName>
-						<CreateTime>%s</CreateTime>
-						<MsgType><![CDATA[text]]></MsgType>
-						<Content><![CDATA[%s]]></Content>
-						<FuncFlag>0</FuncFlag>
-						</xml>";
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[text]]></MsgType>
+                        <Content><![CDATA[%s]]></Content>
+                        <FuncFlag>0</FuncFlag>
+                        </xml>";
+				
+				// "<xml>
+				// <ToUserName><![CDATA[%s]]></ToUserName>
+				// <FromUserName><![CDATA[%s]]></FromUserName>
+				// <CreateTime>%s</CreateTime>
+				// <MsgType><![CDATA[text]]></MsgType>
+				// <Content><![CDATA[%s]]></Content>
+				// <FuncFlag>0</FuncFlag>
+				// </xml>";
 				break;
 		}
 		return $tpl;
