@@ -114,16 +114,16 @@ Title 	否 	视频消息的标题
 Description 	否 	视频消息的描述 
 				 */
 				$tpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[shortvideo]]></MsgType>
-<Video>
-<MediaId><![CDATA[%s]]></MediaId>
-<Title><![CDATA[%s]]></Title>
-<Description><![CDATA[%s]]></Description>
-</Video> 
-</xml>";
+						<ToUserName><![CDATA[%s]]></ToUserName>
+						<FromUserName><![CDATA[%s]]></FromUserName>
+						<CreateTime>%s</CreateTime>
+						<MsgType><![CDATA[shortvideo]]></MsgType>
+						<Video>
+						<MediaId><![CDATA[%s]]></MediaId>
+						<Title><![CDATA[%s]]></Title>
+						<Description><![CDATA[%s]]></Description>
+						</Video> 						
+						</xml>";
 				break;
 			case "music" :
 				/*
@@ -140,17 +140,28 @@ HQMusicUrl 	否 	高质量音乐链接，WIFI环境优先使用该链接播放�
 ThumbMediaId 	否 	缩略图的媒体id，通过素材管理接口上传多媒体文件，得到的id 
 				 */
 				$tpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[music]]></MsgType>
-<Music>
-<Title><![CDATA[%s]]></Title>
-<Description><![CDATA[%s]]></Description>
-<MusicUrl><![CDATA[%s]]></MusicUrl>
-<HQMusicUrl><![CDATA[%s]]></HQMusicUrl>
-</Music>
-</xml>";
+
+						<ToUserName><![CDATA[%s]]></ToUserName>
+
+						<FromUserName><![CDATA[%s]]></FromUserName>
+
+						<CreateTime>%s</CreateTime>
+
+						<MsgType><![CDATA[music]]></MsgType>
+
+						<Music>
+
+						<Title><![CDATA[%s]]></Title>
+
+						<Description><![CDATA[%s]]></Description>
+
+						<MusicUrl><![CDATA[%s]]></MusicUrl>
+
+						<HQMusicUrl><![CDATA[%s]]></HQMusicUrl>
+
+						</Music>
+
+						</xml>";
 				break;
 			case "voice" :
 				/*
@@ -164,14 +175,22 @@ MediaId 	是 	通过素材管理接口上传多媒体文件，得到的id
 				 * 
 				 */
 				$tpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[voice]]></MsgType>
-<Voice>
-<MediaId><![CDATA[%s]]></MediaId>
-</Voice>
-</xml>";
+
+						<ToUserName><![CDATA[%s]]></ToUserName>
+
+						<FromUserName><![CDATA[%s]]></FromUserName>
+
+						<CreateTime>%s</CreateTime>
+
+						<MsgType><![CDATA[voice]]></MsgType>
+
+						<Voice>
+
+						<MediaId><![CDATA[%s]]></MediaId>
+
+						</Voice>
+
+						</xml>";
 				break;
 			case "image" :
 				/*
@@ -185,14 +204,22 @@ MediaId 	是 	通过素材管理接口上传多媒体文件，得到的id。
 				 * 
 				 */
 				$tpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[image]]></MsgType>
-<Image>
-<MediaId><![CDATA[%s]]></MediaId>
-</Image>
-</xml>";
+
+						<ToUserName><![CDATA[%s]]></ToUserName>
+
+						<FromUserName><![CDATA[%s]]></FromUserName>
+
+						<CreateTime>%s</CreateTime>
+
+						<MsgType><![CDATA[image]]></MsgType>
+
+						<Image>
+
+						<MediaId><![CDATA[%s]]></MediaId>
+
+						</Image>
+
+						</xml>";
 				break;
 			case "news" :
 				/*
@@ -213,35 +240,55 @@ Url 	否 	点击图文消息跳转链接
 				$ArticleCount = ( int ) $ArticleCount < 1 ? 1 : ( int ) $ArticleCount;
 				$ArticleCount = $ArticleCount > 10 ? 10 : $ArticleCount;
 				$tpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[news]]></MsgType>
-<ArticleCount>" . $ArticleCount . "</ArticleCount>
-<Articles>";
+
+						<ToUserName><![CDATA[%s]]></ToUserName>
+
+						<FromUserName><![CDATA[%s]]></FromUserName>
+
+						<CreateTime>%s</CreateTime>
+
+						<MsgType><![CDATA[news]]></MsgType>
+
+						<ArticleCount>" . $ArticleCount . "</ArticleCount>
+
+								<Articles>";
 				for($i = 0; $i < $ArticleCount; $i ++) {
 					$tpl .= "
-<item>
-<Title><![CDATA[%s]]></Title> 
-<Description><![CDATA[%s]]></Description>
-<PicUrl><![CDATA[%s]]></PicUrl>
-<Url><![CDATA[%s]]></Url>
-</item>";
+
+							<item>
+
+							<Title><![CDATA[%s]]></Title> 
+
+							<Description><![CDATA[%s]]></Description>
+
+							<PicUrl><![CDATA[%s]]></PicUrl>
+
+							<Url><![CDATA[%s]]></Url>
+
+							</item>";
 				}
 				$tpl .= "
-</Articles>
-</xml> 
+
+						</Articles>
+
+						</xml> 
 			";
 				break;
 			case "text" :
 			default :
 				$tpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[text]]></MsgType>
-<Content><![CDATA[%s]]></Content>
-</xml>";
+
+						<ToUserName><![CDATA[%s]]></ToUserName>
+
+						<FromUserName><![CDATA[%s]]></FromUserName>
+
+						<CreateTime>%s</CreateTime>
+
+						<MsgType><![CDATA[text]]></MsgType>
+
+						<Content><![CDATA[%s]]></Content>
+
+						</xml>";
 				break;
 		}
 		return $tpl;
