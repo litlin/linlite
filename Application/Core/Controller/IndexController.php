@@ -36,7 +36,7 @@ class IndexController {
 			// die ();
 		}
 	}
-	private function valid() {
+	public function valid() {
 		$echoStr = $_GET ["echostr"];
 		if ($this->checkSignature ()) {
 			echo $echoStr;
@@ -66,7 +66,7 @@ class IndexController {
 		$timestamp = $_GET ["timestamp"];
 		$nonce = $_GET ["nonce"];
 		
-		$token = "linlite";
+		$token = TOKEN;
 		$tmpArr = array (
 				$token,$timestamp,$nonce 
 		);
