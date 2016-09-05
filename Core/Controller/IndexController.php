@@ -2,8 +2,6 @@
 
 namespace Linlite\Core\Controller;
 
-use linlite\Core\Model\ResponseMsg;
-
 class IndexController {
 	public function __construct() {
 		if (empty ( $_GET ['echostr'] ) && empty ( $_POST )) {
