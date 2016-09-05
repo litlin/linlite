@@ -1,6 +1,6 @@
 <?php
 
-namespace Linlite\Core\Controller;
+namespace linlite\Core\Controller;
 
 use linlite\Core\Model\ResponseMsg;
 
@@ -11,29 +11,29 @@ class IndexController {
 		} elseif ($_GET ['echostr']) {
 			$this->valid ();
 		} else {
-			// ResponseMsg::response ();
+			ResponseMsg::response ();
 			
-			$postStr = file_get_contents ( 'php://input' );
-			if (! empty ( $postStr )) {
-				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
-				if ($postObj !== false) {
-					$msgType = $postObj->MsgType;
-					$fromUser = $postObj->FromUserName;
-					$toUser = $postObj->ToUserName;
-					$contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
-					$tpl = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[text]]></MsgType>
-<Content><![CDATA[%s]]></Content>
-</xml>";
-					$resultStr = sprintf ( $tpl, $fromUser, $toUser, time (), $contentStr );
-					echo $resultStr;
-				}
-			}
-			echo "";
-			die ();
+			// $postStr = file_get_contents ( 'php://input' );
+			// if (! empty ( $postStr )) {
+			// $postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+			// if ($postObj !== false) {
+			// $msgType = $postObj->MsgType;
+			// $fromUser = $postObj->FromUserName;
+			// $toUser = $postObj->ToUserName;
+			// $contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
+			// $tpl = "<xml>
+			// <ToUserName><![CDATA[%s]]></ToUserName>
+			// <FromUserName><![CDATA[%s]]></FromUserName>
+			// <CreateTime>%s</CreateTime>
+			// <MsgType><![CDATA[text]]></MsgType>
+			// <Content><![CDATA[%s]]></Content>
+			// </xml>";
+			// $resultStr = sprintf ( $tpl, $fromUser, $toUser, time (), $contentStr );
+			// echo $resultStr;
+			// }
+			// }
+			// echo "";
+			// die ();
 		}
 	}
 	private function valid() {

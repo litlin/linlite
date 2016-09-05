@@ -1,6 +1,6 @@
 <?php
 
-namespace Linlite\Core\Model;
+namespace linlite\Core\Model;
 
 class ResponseMsg {
 	public static function response() {

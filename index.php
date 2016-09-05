@@ -1,14 +1,12 @@
 <?php
 
-namespace Linlite;
+namespace linlite;
 
-use Linlite\Core\Controller\IndexController;
+use linlite\Core\Controller\IndexController;
 
-include 'autoloader.php';
+include_once __DIR__ . '/autoloader.php';
 
-Autoload::register ();
+// ini_set("display_error", "on");
 
-ini_set("display_error", "on");
-new IndexController();
-// new \Core\Controller\IndexController();
-echo "abc";
+new IndexController ();
+

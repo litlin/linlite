@@ -1,6 +1,6 @@
 <?php
 
-namespace Linlite\Core\Model;
+namespace linlite\Core\Model;
 
 class AccessToken {
 	private static $appid = "wx2e576dbafca6e32c";

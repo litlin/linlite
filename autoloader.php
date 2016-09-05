@@ -1,30 +1,40 @@
 <?php
 
-namespace Linlite;
+namespace linlite;
 
-class Autoload {
- const NAMESPACE_PREFIX = 'Linlite\\';
-    /**
-     * 向PHP注册在自动载入函数
-     */
-    public static function register(){
-        spl_autoload_register(array(new self, 'autoload'));
-    }
-
-    /**
-     * 根据类名载入所在文件
-     */
-    public static function autoload($className){
-        $namespacePrefixStrlen = strlen(self::NAMESPACE_PREFIX);
-        if(strncmp(self::NAMESPACE_PREFIX, $className, $namespacePrefixStrlen) === 0){
-            $className = strtolower($className);
-            $filePath = str_replace('\\', DIRECTORY_SEPARATOR, substr($className, $namespacePrefixStrlen));
-            $filePath = realpath(__DIR__ . (empty($filePath) ? '' : DIRECTORY_SEPARATOR) . $filePath . '.php');
-            if(file_exists($filePath)){
-                require_once $filePath;
-            }else{
-                echo $filePath;
-            }
-        }
-    }
+class MyAutoload {
+	// const NAMESPACE_PREFIX = 'Linlite\\';
+	/**
+	 * 向PHP注册在自动载入函数
+	 */
+	public static function register() {
+		spl_autoload_register ( array (
+				new self (),'autoload' 
+		) );
+	}
+	
+	/**
+	 * 根据类名载入所在文件
+	 */
+	public static function autoload($className) {
+		$namespace = substr ( $className, 0, strrpos ( $className, "\\" ) );
+		$prefix = strstr ( $className, "\\", true );
+		$basename = substr($className, strrpos ( $className, "\\" )+1 );
+		if ($namespace === $prefix) {
+			$filename = $basename . ".php";
+			if (file_exists ( $filename )) {
+				return include_once $filename;
+			} else {
+				return false;
+			}
+		} else {
+			$filename =__DIR__ . "/Application" . str_replace ( "\\", "/", substr ( $namespace, strlen($prefix) ) ) ."/". $basename.".php";
+			if (file_exists ( $filename )) {
+				return include_once $filename;
+			} else {
+				return false;
+			}
+		}
+	}
 }
+MyAutoload::register ();
