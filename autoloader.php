@@ -23,14 +23,14 @@ class MyAutoload {
 		if ($namespace === $prefix) {
 			$filename = $basename . ".php";
 			if (file_exists ( $filename )) {
-				return include_once $filename;
+				return require $filename;
 			} else {
 				return false;
 			}
 		} else {
 			$filename =__DIR__ . "/Application" . str_replace ( "\\", "/", substr ( $namespace, strlen($prefix) ) ) ."/". $basename.".php";
 			if (file_exists ( $filename )) {
-				return include_once $filename;
+				return require $filename;
 			} else {
 				return false;
 			}
