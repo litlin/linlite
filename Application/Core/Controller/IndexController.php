@@ -15,6 +15,7 @@ class IndexController {
 			try {
 				$postStr = file_get_contents ( 'php://input' );
 				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+				include dirname(__DIR__)."/Model/ResponseMsg.php";
 				$respon = new ResponseMsg();
 				$respon->response($postObj);
 			} catch ( \Exception $e ) {
