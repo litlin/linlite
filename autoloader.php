@@ -28,7 +28,8 @@ class MyAutoload {
 				return false;
 			}
 		} else {
-			$filename =__DIR__ . "/Application" . str_replace ( "\\", "/", substr ( $namespace, strlen($prefix) ) ) ."/". $basename.".php";
+			$filename ="Application" . str_replace ( "\\", "/", substr ( $namespace, strlen($prefix) ) ) ."/". $basename.".php";
+// 			echo $filename;die();
 			if (file_exists ( $filename )) {
 				return require $filename;
 			} else {
