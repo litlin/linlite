@@ -12,38 +12,48 @@ class IndexController {
 			$this->valid ();
 		} else {
 			
-			try {
-				$postStr = file_get_contents ( 'php://input' );
-				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
-				include dirname(__DIR__)."/Model/ResponseMsg.php";
-				$respon = new ResponseMsg();
-				$respon->response($postObj);
-			} catch ( \Exception $e ) {
-				echo "";
-				exit();
-			}
-			
+			// try {
 			// $postStr = file_get_contents ( 'php://input' );
-			// if (! empty ( $postStr )) {
 			// $postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
-			// if ($postObj !== false) {
-			// $msgType = $postObj->MsgType;
+			// // include dirname(__DIR__)."/Model/ResponseMsg.php";
+			// $respon = new ResponseMsg();
+			// $respon->response($postObj);
+			// } catch ( \Exception $e ) {
+			// echo "";
+			// exit();
+			// }
+			
+// 			$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+			$postStr = file_get_contents ( 'php://input' );
+			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
 			// $fromUser = $postObj->FromUserName;
 			// $toUser = $postObj->ToUserName;
-			// $contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
-			// $tpl = "<xml>
-			// <ToUserName><![CDATA[%s]]></ToUserName>
-			// <FromUserName><![CDATA[%s]]></FromUserName>
-			// <CreateTime>%s</CreateTime>
-			// <MsgType><![CDATA[text]]></MsgType>
-			// <Content><![CDATA[%s]]></Content>
-			// </xml>";
-			// $resultStr = sprintf ( $tpl, $fromUser, $toUser, time (), $contentStr );
-			// echo $resultStr;
-			// }
-			// }
-			// echo "";
-			// die ();
+			// echo $fromUser;
+			// $data = array(
+			// 'ToUserName' => $fromUser,
+			// 'FromUserName' => $toUser,
+			// 'CreateTime' => time(),
+			// 'MsgType' => "text",
+			// 'Content'=>"当前时间:\n" . date ( "Y-m-d H:i:s", time () ),
+			// 'FuncFlag'=>0
+			// );
+			
+			// $xml = new \SimpleXMLElement('<xml></xml>');
+			// $this->data2xml($xml, $data);
+			// exit($xml->asXML());
+			$fromUser = $postObj->FromUserName;
+			$toUser = $postObj->ToUserName;
+			$contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
+			$tpl = "<xml>
+			<ToUserName><![CDATA[%s]]></ToUserName>
+			<FromUserName><![CDATA[%s]]></FromUserName>
+			<CreateTime>%s</CreateTime>
+			<MsgType><![CDATA[text]]></MsgType>
+			<Content><![CDATA[%s]]></Content>
+			<FuncFlag>0</FuncFlag>
+			</xml>";
+			$resultStr = sprintf ( $tpl, $fromUser, $toUser, time (), $contentStr );
+			exit($resultStr);
 		}
 	}
 	public function valid() {
@@ -69,6 +79,23 @@ class IndexController {
 				echo "数据库连接测试不成功";
 		} catch ( \PDOException $e ) {
 			echo 'Connection failed: ' . $e->getMessage ();
+		}
+	}
+	private function data2xml($xml, $data, $item = 'item') {
+		foreach ( $data as $key => $value ) {
+			is_numeric ( $key ) && $key = $item;
+			if (is_array ( $value ) || is_object ( $value )) {
+				$child = $xml->addChild ( $key );
+				$this->data2xml ( $child, $value, $item );
+			} else {
+				if (is_numeric ( $value )) {
+					$child = $xml->addChild ( $key, $value );
+				} else {
+					$child = $xml->addChild ( $key );
+					$node = dom_import_simplexml ( $child );
+					$node->appendChild ( $node->ownerDocument->createCDATASection ( $value ) );
+				}
+			}
 		}
 	}
 	private function checkSignature() {

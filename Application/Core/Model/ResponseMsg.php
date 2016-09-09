@@ -7,7 +7,7 @@ class ResponseMsg {
 		$msgType = $postObj->MsgType;
 		$fromUser = $postObj->FromUserName;
 		$toUser = $postObj->ToUserName;
-		include "Curl.php";
+// 		include "Curl.php";
 		switch ($msgType) {
 			case "image" :
 				$contentStr = "发送类型为图片,url地址为：" . $postObj->PicUrl . "媒体ID为：" . $postObj->MediaId;
