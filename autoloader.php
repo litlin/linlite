@@ -30,7 +30,7 @@ class MyAutoload {
 		}
 		$filename = str_replace ( "\\", DIRECTORY_SEPARATOR, strstr ( $className, static::$prefix ) ? substr ( $className, strlen ( static::$prefix ) ) : $className ) . ".php";
 		(static::checkFile ( $filename ) && require $filename) || exit ( "file " . $filename . " not exists" );
-		class_exists ( $className ) || exit ( "class " . $className . " not exists" );
+		class_exists ( $className, false ) || exit ( "class " . $className . " not exists" );
 	}
 	private static function checkFile($filename) {
 		if (file_exists ( $filename ) && is_readable ( $filename )) {
