@@ -5,7 +5,7 @@ namespace linlite\Core\Controller;
 use linlite\Core\Model\ResponseMsg;
 
 class IndexController {
-	public function go() {
+	public function run() {
 		if (empty ( $_GET ['echostr'] ) && empty ( $_POST )) {
 			echo "welcome!";
 		} elseif (isset ( $_GET ['echostr'] )) {

@@ -3,11 +3,11 @@
 namespace linlite\Core\Model;
 
 class ResponseMsg {
-	public  function response(\SimpleXMLElement $postObj) {
+	public function response(\SimpleXMLElement $postObj) {
 		$msgType = $postObj->MsgType;
 		$fromUser = $postObj->FromUserName;
 		$toUser = $postObj->ToUserName;
-// 		include "Curl.php";
+		// include "Curl.php";
 		switch ($msgType) {
 			case "image" :
 				$contentStr = "发送类型为图片,url地址为：" . $postObj->PicUrl . "媒体ID为：" . $postObj->MediaId;
@@ -85,12 +85,12 @@ class ResponseMsg {
 				}
 				break;
 		}
-		if (!isset( $resultStr)) {
-			$resultStr = sprintf ( $this->getTpl ("text"), $fromUser, $toUser, time (), $contentStr );
+		if (! isset ( $resultStr )) {
+			$resultStr = sprintf ( $this->getTpl ( "text" ), $fromUser, $toUser, time (), $contentStr );
 		}
 		echo $resultStr;
 	}
-	private  function getTpl($msgType = "", $ArticleCount = 1) {
+	private function getTpl($msgType = "", $ArticleCount = 1) {
 		$msgType = strtolower ( $msgType );
 		$tpl = "";
 		switch ($msgType) {
