@@ -9,7 +9,6 @@ class MyAutoload {
 	 * 向PHP注册在自动载入函数
 	 */
 	public static function register() {
-		set_exception_handler ( "linlite\\MyAutoload::handleException" );
 		if (function_exists ( '__autoload' )) {
 			// Register any existing autoloader function with SPL,
 			// so we don't get any clashes
@@ -28,18 +27,34 @@ class MyAutoload {
 		if (class_exists ( $className, false )) {
 			return true;
 		}
-		$filename = str_replace ( "\\", DIRECTORY_SEPARATOR, strstr ( $className, static::$prefix ) ? substr ( $className, strlen ( static::$prefix ) ) : $className ) . ".php";
-		(static::checkFile ( $filename ) && require $filename) || exit ( "file " . $filename . " not exists" );
-		class_exists ( $className, false ) || exit ( "class " . $className . " not exists" );
+		$len = strlen ( self::$prefix );
+		if (strncmp ( self::$prefix, $className, $len ) === 0) {
+			$filePath = str_replace ( "\\", DIRECTORY_SEPARATOR, substr ( $className, $len ) );
+		} else {
+			$filePath = str_replace ( "\\", DIRECTORY_SEPARATOR, $className );
+		}
+		$filePath = realpath ( __DIR__ . (empty ( $filePath ) ? '' : DIRECTORY_SEPARATOR) . $filePath . '.php' );
+		
+		// set_exception_handler ( array(new self(),"handleException"));
+		if (static::checkFile ( $filePath )) {
+			require $filePath;
+		} else {
+			throw static::handleException ( "file not exists!" );
+		}
+		if (! class_exists ( $className, false )) {
+			throw static::handleException ( "class not exists!" );
+		}
+		return true;
 	}
-	private static function checkFile($filename) {
-		if (file_exists ( $filename ) && is_readable ( $filename )) {
+	private static function checkFile($filePath) {
+		if (file_exists ( $filePath ) && is_readable ( $filePath )) {
 			return true;
 		}
 		return false;
 	}
-	public static function handleException($exception) {
-		echo '发生错误:' . $exception;
+	private static function handleException($e) {
+		echo '<b>发生错误:</b><br>' . $e;
+		exit ();
 	}
 }
 MyAutoload::register ();
