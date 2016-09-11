@@ -9,7 +9,7 @@ class MyAutoload {
 	 * 向PHP注册在自动载入函数
 	 */
 	public static function register() {
-		set_exception_handler ( "MyAutoload::handleException" );
+		set_exception_handler ( "linlite\\MyAutoload::handleException" );
 		if (function_exists ( '__autoload' )) {
 			// Register any existing autoloader function with SPL,
 			// so we don't get any clashes
