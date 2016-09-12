@@ -89,6 +89,7 @@ class ResponseMsg {
 			$resultStr = sprintf ( $this->getTpl ( "text" ), $fromUser, $toUser, time (), $contentStr );
 		}
 		echo $resultStr;
+		exit();
 	}
 	private function getTpl($msgType = "", $ArticleCount = 1) {
 		$msgType = strtolower ( $msgType );
