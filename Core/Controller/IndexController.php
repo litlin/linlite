@@ -10,43 +10,73 @@ class IndexController {
 			if (isset ( $_GET ['echostr'] )) {
 				$this->valid ();
 			} else {
-// 				$postStr = file_get_contents ( 'php://input' );
-// 				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
-// 				// include dirname(__DIR__)."/Model/ResponseMsg.php";
-// 				$respon = new ResponseMsg ();
-// 				$respon->response ( $postObj );
+				// $postStr = file_get_contents ( 'php://input' );
+				// $postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+				// // include dirname(__DIR__)."/Model/ResponseMsg.php";
+				// $respon = new ResponseMsg ();
+				// $respon->response ( $postObj );
 				
 				// $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
 				$postStr = file_get_contents ( 'php://input' );
-				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
-				// $fromUser = $postObj->FromUserName;
-				// $toUser = $postObj->ToUserName;
-				// echo $fromUser;
-				// $data = array(
-				// 'ToUserName' => $fromUser,
-				// 'FromUserName' => $toUser,
-				// 'CreateTime' => time(),
-				// 'MsgType' => "text",
-				// 'Content'=>"当前时间:\n" . date ( "Y-m-d H:i:s", time () ),
-				// 'FuncFlag'=>0
-				// );
 				
-				// $xml = new \SimpleXMLElement('<xml></xml>');
-				// $this->data2xml($xml, $data);
-				// exit($xml->asXML());
-				$fromUser = $postObj->FromUserName;
-				$toUser = $postObj->ToUserName;
-				$contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
-				$tpl = "<xml>
-				<ToUserName><![CDATA[%s]]></ToUserName>
-				<FromUserName><![CDATA[%s]]></FromUserName>
-				<CreateTime>%s</CreateTime>
-				<MsgType><![CDATA[text]]></MsgType>
-				<Content><![CDATA[%s]]></Content>
-				<FuncFlag>0</FuncFlag>
-				</xml>";
-				$resultStr = sprintf ( $tpl, $fromUser, $toUser, time (), $contentStr );
-				echo $resultStr;
+				if (! empty ( $postStr )) {
+					$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+					if ($postObj !== false) {
+						$msgType = $postObj->MsgType;
+						$fromUsername = $postObj->FromUserName;
+						$toUsername = $postObj->ToUserName;
+						$time = time ();
+						$tpl = "<xml>
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[%s]]></MsgType>
+                        <Content><![CDATA[%s]]></Content>
+                        <FuncFlag>0</FuncFlag>
+                        </xml>";
+						$resultType = "text";
+						switch ($msgType) {
+							case "image" :
+								$contentStr = "发送类型为图片,url地址为：" . $postObj->PicUrl . "媒体ID为：" . $postObj->MediaId;
+								break;
+							case "voice" :
+								$contentStr = "发送类型为语音,格式为：" . $postObj->Format . "媒体ID为：" . $postObj->MediaId;
+								break;
+							/**
+							 * 经过测试目前为小视频
+							 */
+							case "shortvideo" :
+								$contentStr = "发送类型为视频,媒体ID为：" . $postObj->MediaId . "缩略图ID为：" . $postObj->ThumbMediaId;
+								break;
+							case "location" :
+								$contentStr = "发送类型为位置：" . $postObj->Label . "坐标为：X:" . $postObj->Location_X . "Y：" . $postObj->Location_Y . "缩放级别：" . $postObj->Scale;
+								break;
+							case "link" :
+								$contentStr = "发送类型为链接,标题为：" . $postObj->Title . "图文消息描述：" . $postObj->Description . "图文消息链接：" . $postObj->Url;
+								break;
+							case "text" :
+								$keyword = trim ( $postObj->Content );
+								if ($keyword == "?" || $keyword == "？" || preg_match ( "/[当前|现在|目前]?(?=时间)/u", $keyword )) {
+									$contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
+								} else {
+									$contentStr = "针对信息\"" . $keyword . "\"的回应";
+								}
+								break;
+							default :
+								$contentStr = "发送信息为：\n";
+								foreach ( $postObj as $k => $v ) {
+									$contentStr .= "键：" . $k . " 值：" . $v . "\n";
+								}
+								break;
+						}
+						if (! isset ( $resultStr ))
+							$resultStr = sprintf ( $tpl, $fromUsername, $toUsername, $time, $resultType, $contentStr );
+						echo $resultStr;
+					}
+				} else {
+					echo "";
+					exit ();
+				}
 			}
 		}
 	}
