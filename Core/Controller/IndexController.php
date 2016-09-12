@@ -2,8 +2,6 @@
 
 namespace linlite\Core\Controller;
 
-use linlite\Core\Model\ResponseMsg;
-
 class IndexController {
 	public function run() {
 		if (empty ( $_GET ['echostr'] ) && empty ( $_POST )) {
@@ -12,15 +10,15 @@ class IndexController {
 			if (isset ( $_GET ['echostr'] )) {
 				$this->valid ();
 			} else {
-				$postStr = file_get_contents ( 'php://input' );
-				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
-				// include dirname(__DIR__)."/Model/ResponseMsg.php";
-				$respon = new ResponseMsg ();
-				$respon->response ( $postObj );
+// 				$postStr = file_get_contents ( 'php://input' );
+// 				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+// 				// include dirname(__DIR__)."/Model/ResponseMsg.php";
+// 				$respon = new ResponseMsg ();
+// 				$respon->response ( $postObj );
 				
 				// $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
-				// $postStr = file_get_contents ( 'php://input' );
-				// $postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+				$postStr = file_get_contents ( 'php://input' );
+				$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
 				// $fromUser = $postObj->FromUserName;
 				// $toUser = $postObj->ToUserName;
 				// echo $fromUser;
@@ -36,19 +34,19 @@ class IndexController {
 				// $xml = new \SimpleXMLElement('<xml></xml>');
 				// $this->data2xml($xml, $data);
 				// exit($xml->asXML());
-				// $fromUser = $postObj->FromUserName;
-				// $toUser = $postObj->ToUserName;
-				// $contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
-				// $tpl = "<xml>
-				// <ToUserName><![CDATA[%s]]></ToUserName>
-				// <FromUserName><![CDATA[%s]]></FromUserName>
-				// <CreateTime>%s</CreateTime>
-				// <MsgType><![CDATA[text]]></MsgType>
-				// <Content><![CDATA[%s]]></Content>
-				// <FuncFlag>0</FuncFlag>
-				// </xml>";
-				// $resultStr = sprintf ( $tpl, $fromUser, $toUser, time (), $contentStr );
-				// exit($resultStr);
+				$fromUser = $postObj->FromUserName;
+				$toUser = $postObj->ToUserName;
+				$contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
+				$tpl = "<xml>
+				<ToUserName><![CDATA[%s]]></ToUserName>
+				<FromUserName><![CDATA[%s]]></FromUserName>
+				<CreateTime>%s</CreateTime>
+				<MsgType><![CDATA[text]]></MsgType>
+				<Content><![CDATA[%s]]></Content>
+				<FuncFlag>0</FuncFlag>
+				</xml>";
+				$resultStr = sprintf ( $tpl, $fromUser, $toUser, time (), $contentStr );
+				echo $resultStr;
 			}
 		}
 	}
