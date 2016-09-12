@@ -4,11 +4,13 @@ namespace linlite;
 
 class MyAutoload {
 	// const NAMESPACE_PREFIX = 'Linlite\\';
-	private static $prefix = "linlite\\";
+	private static $_prefix = "linlite\\";
+	private static $_map = array ();
 	/**
 	 * 向PHP注册在自动载入函数
 	 */
 	public static function register() {
+		self::$_map = include_once 'config/classmap.php';
 		if (function_exists ( '__autoload' )) {
 			// Register any existing autoloader function with SPL,
 			// so we don't get any clashes
@@ -27,8 +29,10 @@ class MyAutoload {
 		if (class_exists ( $className, false )) {
 			return true;
 		}
-		$len = strlen ( self::$prefix );
-		if (strncmp ( self::$prefix, $className, $len ) === 0) {
+		if (isset ( self::$_map [$className] ))
+			return include self::$_map [$className];
+		$len = strlen ( self::$_prefix );
+		if (strncmp ( self::$_prefix, $className, $len ) === 0) {
 			$filePath = str_replace ( "\\", DIRECTORY_SEPARATOR, substr ( $className, $len ) );
 		} else {
 			$filePath = str_replace ( "\\", DIRECTORY_SEPARATOR, $className );
@@ -37,7 +41,7 @@ class MyAutoload {
 		
 		// set_exception_handler ( array(new self(),"handleException"));
 		if (static::checkFile ( $filePath )) {
-			require $filePath;
+			include $filePath;
 		} else {
 			throw static::handleException ( "file not exists!" );
 		}
@@ -57,4 +61,5 @@ class MyAutoload {
 		exit ();
 	}
 }
+
 MyAutoload::register ();

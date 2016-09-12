@@ -63,7 +63,7 @@ class IndexController {
 			die ();
 		}
 	}
-	public function dbTest() {
+	public static function dbTest() {
 		die ( "租用数据库服务后设置好参数后再行测试" );
 		$dsn = 'mysql:host=w.rdc.sae.sina.com.cn;port=3307;dbname=app_linlite';
 		$user = '5n4oxmzmkn';
