@@ -9,8 +9,8 @@ require 'autoloader.php';
 // ini_set("display_error", "on");
 // session_start();
 
-// $str1=file_get_contents("php://input");
-// TestController::run($str1);
+$str1=file_get_contents("php://input");
+TestController::run($str1);
 $c = new IndexController ();
 if (isset ( $_GET ['echostr'] )) {
 	$c->valid ();
