@@ -9,8 +9,8 @@ class TestController {
 		} else {
 			
 			$str2 = file_get_contents ( "php://input" );
-			if (! empty ( $str1 )) {
-				$postObj = simplexml_load_string ( $str1, 'SimpleXMLElement', LIBXML_NOCDATA );
+			if (! empty ( $str2 )) {
+				$postObj = simplexml_load_string ( $str2, 'SimpleXMLElement', LIBXML_NOCDATA );
 				if ($postObj !== false) {
 					$fromUser = $postObj->FromUserName;
 					$toUser = $postObj->ToUserName;
