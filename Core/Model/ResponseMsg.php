@@ -4,7 +4,9 @@ namespace linlite\Core\Model;
 
 class ResponseMsg {
 	public function response() {
-		$postStr = file_get_contents ( 'php://input' );	
+		$resultStr = "";
+		$postStr = file_get_contents ( 'php://input' );
+		
 		if (! empty ( $postStr )) {
 			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
 			if ($postObj !== false) {
@@ -89,10 +91,12 @@ class ResponseMsg {
 						}
 						break;
 				}
-				if (! isset ( $resultStr ))
+				if (empty( $resultStr )) {
 					$resultStr = sprintf ( $this->getTpl ( "text" ), $fromUser, $toUser, time (), $contentStr );
+				}
 			}
 		}
+		
 		exit ( $resultStr );
 	}
 	public function valid() {
@@ -280,4 +284,4 @@ Url 	否 	点击图文消息跳转链接
 		}
 		return $tpl;
 	}
-}
+} 
