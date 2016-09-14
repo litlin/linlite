@@ -3,93 +3,123 @@
 namespace linlite\Core\Model;
 
 class ResponseMsg {
-	public function response(\SimpleXMLElement $postObj) {
-		$msgType = $postObj->MsgType;
-		$fromUser = $postObj->FromUserName;
-		$toUser = $postObj->ToUserName;
-		// include "Curl.php";
-		switch ($msgType) {
-			case "image" :
-				$contentStr = "发送类型为图片,url地址为：" . $postObj->PicUrl . "媒体ID为：" . $postObj->MediaId;
-				break;
-			case "voice" :
-				$contentStr = "发送类型为语音,格式为：" . $postObj->Format . "媒体ID为：" . $postObj->MediaId;
-				break;
-			/**
-			 * 经过测试目前为小视频
-			 */
-			case "shortvideo" :
-				$contentStr = "发送类型为视频,媒体ID为：" . $postObj->MediaId . "缩略图ID为：" . $postObj->ThumbMediaId;
-				break;
-			case "location" :
-				$contentStr = "发送类型为位置：" . $postObj->Label . "坐标为：X:" . $postObj->Location_X . "Y：" . $postObj->Location_Y . "缩放级别：" . $postObj->Scale;
-				break;
-			case "link" :
-				$contentStr = "发送类型为链接,标题为：" . $postObj->Title . "图文消息描述：" . $postObj->Description . "图文消息链接：" . $postObj->Url;
-				break;
-			case "text" :
-				$keyWord = trim ( $postObj->Content );
-				switch (true) {
-					case $keyWord == "?" || $keyWord == "？" || preg_match ( "/[当前|现在|目前]?(?=时间)/u", $keyWord ) :
-						$contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
+	public function response() {
+		$postStr = file_get_contents ( 'php://input' );	
+		if (! empty ( $postStr )) {
+			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+			if ($postObj !== false) {
+				$msgType = $postObj->MsgType;
+				$fromUser = $postObj->FromUserName;
+				$toUser = $postObj->ToUserName;
+				// include "Curl.php";
+				switch ($msgType) {
+					case "image" :
+						$contentStr = "发送类型为图片,url地址为：" . $postObj->PicUrl . "媒体ID为：" . $postObj->MediaId;
 						break;
-					case preg_match ( "/[\x{4e00}-\x{9fa5}]{2,3}(?=图片|图文)/u", $keyWord ) :
-						$resultStr = sprintf ( $this->getTpl ( "news", 1 ), $fromUser, $toUser, time (), "描述信息", "测试图文格式--标题", "测试链接为必应中国网址", "http://mmbiz.qpic.cn/mmbiz/LhuPjPp9Ry8yeKvmr6AqLCagF0vVKAuhe9cvKibY0Xw78WNficH84fou6HD5V8khgct6dp3ibSJbLVViba6LXugZRg/0", "http://cn.bing.com" );
+					case "voice" :
+						$contentStr = "发送类型为语音,格式为：" . $postObj->Format . "媒体ID为：" . $postObj->MediaId;
 						break;
-					case preg_match ( "/^[\x{4e00}-\x{9fa5}]{0,2}(?=音乐$|music$)/u", $keyWord ) :
-						$title = "Shatter Me";
-						$description = "Lindsey Stirling Lzzy Hale";
-						$html = Curl::getHeader ( "https://od.lk/s/NzZfMzY5ODk2OV8/Lindsey%20Stirling%20Lzzy%20Hale%20-%20Shatter%20Me.mp3" );
-						
-						preg_match ( '/^Location:\s(https?.*)$/m', $html, $match );
-						$musicUrl = $match [1];
-						$HQMusicUrl = $musicUrl;
-						$resultStr = sprintf ( $this->getTpl ( "music" ), $fromUser, $toUser, time (), $title, $description, $musicUrl, $HQMusicUrl );
+					/**
+					 * 经过测试目前为小视频
+					 */
+					case "shortvideo" :
+						$contentStr = "发送类型为视频,媒体ID为：" . $postObj->MediaId . "缩略图ID为：" . $postObj->ThumbMediaId;
 						break;
-					case preg_match ( '/^添加按钮$/u', $keyWord ) :
-						$url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" . AccessToken::getAccessToken ();
-						$button = urldecode ( json_encode ( array (
-								"button" => array (
-										array (
-												"name" => urlencode ( "菜单" ),
-												"sub_button" => array (
-														array (
-																"name" => urlencode ( "搜索" ),"type" => "view","url" => "http://cn.bing.com" 
-														),array (
-																"name" => urlencode ( "视频" ),"type" => "view","url" => "http://v.qq.com" 
+					case "location" :
+						$contentStr = "发送类型为位置：" . $postObj->Label . "坐标为：X:" . $postObj->Location_X . "Y：" . $postObj->Location_Y . "缩放级别：" . $postObj->Scale;
+						break;
+					case "link" :
+						$contentStr = "发送类型为链接,标题为：" . $postObj->Title . "图文消息描述：" . $postObj->Description . "图文消息链接：" . $postObj->Url;
+						break;
+					case "text" :
+						$keyWord = trim ( $postObj->Content );
+						switch (true) {
+							case $keyWord == "?" || $keyWord == "？" || preg_match ( "/[当前|现在|目前]?(?=时间)/u", $keyWord ) :
+								$contentStr = "当前时间:\n" . date ( "Y-m-d H:i:s", time () );
+								break;
+							case preg_match ( "/[\x{4e00}-\x{9fa5}]{2,3}(?=图片|图文)/u", $keyWord ) :
+								$resultStr = sprintf ( $this->getTpl ( "news", 1 ), $fromUser, $toUser, time (), "描述信息", "测试图文格式--标题", "测试链接为必应中国网址", "http://mmbiz.qpic.cn/mmbiz/LhuPjPp9Ry8yeKvmr6AqLCagF0vVKAuhe9cvKibY0Xw78WNficH84fou6HD5V8khgct6dp3ibSJbLVViba6LXugZRg/0", "http://cn.bing.com" );
+								break;
+							case preg_match ( "/^[\x{4e00}-\x{9fa5}]{0,2}(?=音乐$|music$)/u", $keyWord ) :
+								$title = "Shatter Me";
+								$description = "Lindsey Stirling Lzzy Hale";
+								$html = Curl::getHeader ( "https://od.lk/s/NzZfMzY5ODk2OV8/Lindsey%20Stirling%20Lzzy%20Hale%20-%20Shatter%20Me.mp3" );
+								
+								preg_match ( '/^Location:\s(https?.*)$/m', $html, $match );
+								$musicUrl = $match [1];
+								$HQMusicUrl = $musicUrl;
+								$resultStr = sprintf ( $this->getTpl ( "music" ), $fromUser, $toUser, time (), $title, $description, $musicUrl, $HQMusicUrl );
+								break;
+							case preg_match ( '/^添加按钮$/u', $keyWord ) :
+								$url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" . AccessToken::getAccessToken ();
+								$button = urldecode ( json_encode ( array (
+										"button" => array (
+												array (
+														"name" => urlencode ( "菜单" ),
+														"sub_button" => array (
+																array (
+																		"name" => urlencode ( "搜索" ),"type" => "view","url" => "http://cn.bing.com" 
+																),array (
+																		"name" => urlencode ( "视频" ),"type" => "view","url" => "http://v.qq.com" 
+																) 
 														) 
 												) 
 										) 
-								) 
-						) ) );
-						$html = Curl::callWebServer ( $url, $button, 'post' );
-						$contentStr = implode ( " ", $html );
+								) ) );
+								$html = Curl::callWebServer ( $url, $button, 'post' );
+								$contentStr = implode ( " ", $html );
+								break;
+							case preg_match ( '/^删除按钮$/u', $keyWord ) :
+								$url = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=" . AccessToken::getAccessToken ();
+								$html = Curl::callWebServer ( $url );
+								$contentStr = implode ( " ", $html );
+								break;
+							// case (preg_match ( "/^\bget\b\s\bkey\b$/", $keyWord ) && !$_SERVER [‘HTTP_APPNAME’]) :
+							// $contentStr = AccessToken::getAccessToken ();
+							// break;
+							default :
+								$contentStr = "针对信息\"" . $keyWord . "\"的回应";
+								break;
+						}
 						break;
-					case preg_match ( '/^删除按钮$/u', $keyWord ) :
-						$url = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=" . AccessToken::getAccessToken ();
-						$html = Curl::callWebServer ( $url );
-						$contentStr = implode ( " ", $html );
-						break;
-					// case (preg_match ( "/^\bget\b\s\bkey\b$/", $keyWord ) && !$_SERVER [‘HTTP_APPNAME’]) :
-					// $contentStr = AccessToken::getAccessToken ();
-					// break;
 					default :
-						$contentStr = "针对信息\"" . $keyWord . "\"的回应";
+						$contentStr = "发送信息为：\n";
+						foreach ( $postObj as $k => $v ) {
+							$contentStr .= "键：" . $k . " 值：" . $v . "\n";
+						}
 						break;
 				}
-				break;
-			default :
-				$contentStr = "发送信息为：\n";
-				foreach ( $postObj as $k => $v ) {
-					$contentStr .= "键：" . $k . " 值：" . $v . "\n";
-				}
-				break;
+				if (! isset ( $resultStr ))
+					$resultStr = sprintf ( $this->getTpl ( "text" ), $fromUser, $toUser, time (), $contentStr );
+			}
 		}
-		if (! isset ( $resultStr )) {
-			$resultStr = sprintf ( $this->getTpl ( "text" ), $fromUser, $toUser, time (), $contentStr );
+		exit ( $resultStr );
+	}
+	public function valid() {
+		$echoStr = $_GET ["echostr"];
+		if ($this->checkSignature ()) {
+			echo $echoStr;
+			die ();
 		}
-		echo $resultStr;
-		exit();
+	}
+	private function checkSignature() {
+		$signature = $_GET ["signature"];
+		$timestamp = $_GET ["timestamp"];
+		$nonce = $_GET ["nonce"];
+		
+		$token = TOKEN;
+		$tmpArr = array (
+				$token,$timestamp,$nonce 
+		);
+		sort ( $tmpArr );
+		$tmpStr = implode ( $tmpArr );
+		$tmpStr = sha1 ( $tmpStr );
+		
+		if ($tmpStr == $signature) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	private function getTpl($msgType = "", $ArticleCount = 1) {
 		$msgType = strtolower ( $msgType );

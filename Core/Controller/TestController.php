@@ -2,10 +2,12 @@
 
 namespace linlite\Core\Controller;
 
+use linlite\Core\Model\ResponseMsg;
+
 class TestController {
 	public static function run($str1 = "") {
 		if (isset ( $_GET ['echostr'] )) {
-			(new IndexController ())->valid ();
+			(new ResponseMsg())->valid ();
 		} else {
 			(new IndexController())->response();
 // 			$str2 = file_get_contents ( "php://input" );

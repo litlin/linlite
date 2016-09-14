@@ -5,31 +5,11 @@ namespace linlite\Core\Controller;
 use linlite\Core\Model\ResponseMsg;
 
 class IndexController {
-	public function run(){
+	public static function run() {
 		if (isset ( $_GET ['echostr'] )) {
-			$this->valid();
-		}else {
-			$this->response();
-		}
-	}
-	public function response() {
-		$postStr = file_get_contents ( 'php://input' );
-		
-		if (! empty ( $postStr )) {
-			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
-			if ($postObj !== false) {
-				$respon = new ResponseMsg ();
-				$respon->response ( $postObj );
-			}
-		}
-		echo "";
-		exit ();
-	}
-	public function valid() {
-		$echoStr = $_GET ["echostr"];
-		if ($this->checkSignature ()) {
-			echo $echoStr;
-			die ();
+			(new ResponseMsg ())->valid ();
+		} else {
+			(new ResponseMsg ())->response ();
 		}
 	}
 	public static function dbTest() {
@@ -65,25 +45,6 @@ class IndexController {
 					$node->appendChild ( $node->ownerDocument->createCDATASection ( $value ) );
 				}
 			}
-		}
-	}
-	private function checkSignature() {
-		$signature = $_GET ["signature"];
-		$timestamp = $_GET ["timestamp"];
-		$nonce = $_GET ["nonce"];
-		
-		$token = TOKEN;
-		$tmpArr = array (
-				$token,$timestamp,$nonce 
-		);
-		sort ( $tmpArr );
-		$tmpStr = implode ( $tmpArr );
-		$tmpStr = sha1 ( $tmpStr );
-		
-		if ($tmpStr == $signature) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 }

@@ -10,12 +10,7 @@ require 'autoloader.php';
 
 // $str1=file_get_contents("php://input");
 // TestController::run($str1);
-(new IndexController ())->run ();
-// if (isset ( $_GET ['echostr'] )) {
-// 	$c->valid ();
-// } else {
-// 	$c->response ();
-// }
+IndexController::run ();
 
 
 
