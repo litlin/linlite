@@ -5,6 +5,13 @@ namespace linlite\Core\Controller;
 use linlite\Core\Model\ResponseMsg;
 
 class IndexController {
+	public function run(){
+		if (isset ( $_GET ['echostr'] )) {
+			$this->valid();
+		}else {
+			$this->response();
+		}
+	}
 	public function response() {
 		$postStr = file_get_contents ( 'php://input' );
 		
