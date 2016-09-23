@@ -1,5 +1,7 @@
 <?php
-use linlite\Core\Controller\IndexController;
+
+
+use linlite\linlite\Bootstrap;
 
 chdir ( dirname ( __DIR__ ) );
 
@@ -10,7 +12,8 @@ require 'autoloader.php';
 
 // $str1=file_get_contents("php://input");
 // TestController::run($str1);
-IndexController::run ();
+
+Bootstrap::start();
 
 
 

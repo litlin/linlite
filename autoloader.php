@@ -29,7 +29,7 @@ class MyAutoload {
 		if (class_exists ( $className, false )) {
 			return true;
 		}
-		if (isset ( self::$_map [$className] ))
+		if (self::$_map [$className])
 			return include self::$_map [$className];
 		$len = strlen ( self::$_prefix );
 		if (strncmp ( self::$_prefix, $className, $len ) === 0) {
@@ -37,9 +37,16 @@ class MyAutoload {
 		} else {
 			$filePath = str_replace ( "\\", DIRECTORY_SEPARATOR, $className );
 		}
-		$filePath = realpath ( __DIR__ . (empty ( $filePath ) ? '' : DIRECTORY_SEPARATOR) . $filePath . '.php' );
 		
-		// set_exception_handler ( array(new self(),"handleException"));
+		$path = realpath ( __DIR__ . DIRECTORY_SEPARATOR . "Application" . DIRECTORY_SEPARATOR . $filePath . '.php' );
+		if ($path === false)
+			$path = realpath ( __DIR__ . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . $filePath . '.php' );
+			// set_exception_handler ( array(new self(),"handleException"));
+		if ($path !== false) {
+			$filePath = $path;
+		} else {
+			$filePath .= ".php";
+		}
 		if (static::checkFile ( $filePath )) {
 			include $filePath;
 		} else {
