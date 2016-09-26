@@ -10,28 +10,58 @@ class Bootstrap {
 	public static function start() {
 		$uri = explode ( '/', $_SERVER ['REQUEST_URI'] );
 		array_shift ( $uri );
-		$uri = array_filter ( $uri );
-		
-		while ( true ) {
-			if (empty ( $uri ))
-				break;
-		}
-		if (! empty ( $uri )) {
-			$path = ucfirst ( strtolower ( array_shift ( $uri ) ) );
-			if (is_dir ( "Application/" . $path )) {
-				self::$_module = $path;
-			} else {
-				$className = "linlite\\Home\\Controller\\" . $path . "Controller";
-				if (self::checkClass ( $className )) {
-					self::$_controller = $path;
-				}
+		static::defineVars ( $uri );
+		static::callAction();
+	}
+	private static function defineVars() {
+		$vars = ( array ) func_get_arg ( 0 );
+		$process = 1;
+		while ( $vars ) {
+			$path = array_shift ( $vars );
+			switch ($process) {
+				case 1 :
+					if ($path) {
+						if (is_dir ( "Application" . DIRECTORY_SEPARATOR . ucfirst ( strtolower ( $path ) ) )) {
+							self::$_module = $path;
+							$process = 2;
+						} else {
+							goto process2;
+						}
+					}
+					break;
+				case 2 :
+					process2:
+					if ($path) {
+						$className = "linlite\\" . self::$_module . "\\Controller\\" . ucwords ( strtolower ( $path ) ) . "Controller";
+						if (self::checkClass ( $className )) {
+							self::$_controller = $path;
+							echo "Controller name is $path <br>";
+							$process = 3;
+						} else {
+							goto process3;
+						}
+					}
+					break;
+				case 3 :
+					process3:
+					if ($path) {
+						if (self::checkAction ( strtolower ( $path ) )) {
+							self::$_action = $path;
+							echo "action name is $path <br>";
+							$process = 4;
+						} else {
+							goto process4;
+						}
+					}
+					break;
+				case 4 :
+				default :
+					process4:
+					self::$_vars = $path;
+					$process ++;
+					break;
 			}
-			
-			empty ( $uri ) || ($controller = ucwords ( strtolower ( array_shift ( $uri ) ) ));
-			empty ( $uri ) || ($action = strtolower ( array_shift ( $uri ) ));
-			empty ( $uri ) || ($vars = $uri);
 		}
-		return self::callAction ();
 	}
 	private static function callAction() {
 		$controller = self::$_controller;
@@ -44,19 +74,29 @@ class Bootstrap {
 			} elseif (method_exists ( $clsHandler, "_empty" )) {
 				$clsHandler::_empty ( $method );
 			} else {
-				exit ( "<h2>$controller.php:  $controller::$method Not Found</h2>" );
+				exit ( "<h2>action $method not exists!</h2>" );
 			}
 		} else {
 			exit ( "<h2>$controller.php:  $controller Not Found</h2>" );
 		}
 	}
-	private static function checkClass($className) {
+	private static function checkModule() {
+		$module = func_get_arg ( 0 ) ? func_get_arg ( 0 ) : self::$_module;
+		if ($module && is_dir ( "Application" . DIRECTORY_SEPARATOR . $module ))
+			return true;
+		return false;
+	}
+	private static function checkClass() {
+		$className = func_get_arg ( 0 ) ? func_get_arg ( 0 ) : "linlite\\" . self::$_module . "\\Controller\\" . self::$_controller . "Controller";
 		if (class_exists ( $className ))
 			return true;
 		return false;
 	}
-	private static function checkAction($controller, $action) {
-		if (method_exists ( new $controller (), $action ))
+	private static function checkAction() {
+		$action = func_get_arg ( 0 ) ? func_get_arg ( 0 ) : self::$_action;
+		$controller = "linlite\\" . self::$_module . "\\Controller\\" . self::$_controller . "Controller";
+		$clsHandler = new $controller ();
+		if (method_exists ( $clsHandler, $action ))
 			return true;
 		return false;
 	}
