@@ -54,18 +54,23 @@ class ResponseMsg {
 						case preg_match ( '/^添加按钮$/u', $keyWord ) :
 							$url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" . AccessToken::getAccessToken ();
 							$button = urldecode ( json_encode ( array (
-									"button" => array (
+								"button" => array (
+									array (
+										"name" => urlencode ( "菜单" ),
+										"sub_button" => array (
 											array (
-													"name" => urlencode ( "菜单" ),
-													"sub_button" => array (
-															array (
-																	"name" => urlencode ( "搜索" ),"type" => "view","url" => "http://cn.bing.com" 
-															),array (
-																	"name" => urlencode ( "视频" ),"type" => "view","url" => "http://v.qq.com" 
-															) 
-													) 
+												"name" => urlencode ( "搜索" ),
+												"type" => "view",
+												"url" => "http://cn.bing.com" 
+											),
+											array (
+												"name" => urlencode ( "视频" ),
+												"type" => "view",
+												"url" => "http://v.qq.com" 
 											) 
+										) 
 									) 
+								) 
 							) ) );
 							$html = Curl::callWebServer ( $url, $button, 'post' );
 							$contentStr = implode ( " ", $html );
@@ -111,7 +116,9 @@ class ResponseMsg {
 		
 		$token = TOKEN;
 		$tmpArr = array (
-				$token,$timestamp,$nonce 
+			$token,
+			$timestamp,
+			$nonce 
 		);
 		sort ( $tmpArr );
 		$tmpStr = implode ( $tmpArr );

@@ -9,11 +9,9 @@ class Bootstrap {
 	private static $_vars;
 	public static function start() {
 		$uri = explode ( '/', $_SERVER ['REQUEST_URI'] );
-		var_dump($uri);
 		array_shift ( $uri );
-		if ($_SERVER [‘HTTP_APPNAME’])
+		if ($_SERVER ["HTTP_APPNAME"])
 			array_shift ( $uri );
-		var_dump($uri);
 		static::defineVars ( $uri );
 		static::callAction ();
 	}

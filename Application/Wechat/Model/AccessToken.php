@@ -9,7 +9,7 @@ class AccessToken {
 	private static $expiresTime;
 	protected static $token = "linlite";
 	public static function getAccessToken() {
-		if ($_SERVER [‘HTTP_APPNAME’]) {
+		if ($_SERVER ["HTTP_APPNAME"]) {
 			if (file_exists ( self::$token . 'access_token.json' )) {
 				$res = file_get_contents ( self::$token . 'access_token.json' );
 				$result = json_decode ( $res, true );
@@ -44,7 +44,7 @@ class AccessToken {
 		return self::$accessToken;
 	}
 	protected static function saveAccessToken() {
-		if ($_SERVER [‘HTTP_APPNAME’]) {
+		if ($_SERVER ["HTTP_APPNAME"]) {
 			// try {
 			return file_put_contents ( self::$token . 'access_token.json', '{"access_token":"' . self::$access_token . '","expires_time":' . time () + self::$expires_time - 5 . '}' );
 			// } catch ( \Exception $error ) {
