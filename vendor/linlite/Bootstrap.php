@@ -10,6 +10,8 @@ class Bootstrap {
 	public static function start() {
 		$uri = explode ( '/', $_SERVER ['REQUEST_URI'] );
 		array_shift ( $uri );
+		$_SERVER [‘HTTP_APPNAME’] && array_shift ( $uri );
+		
 		static::defineVars ( $uri );
 		static::callAction ();
 	}
@@ -75,7 +77,7 @@ class Bootstrap {
 	private static function callAction() {
 		$controller = self::$_controller;
 		$className = "linlite\\" . self::$_module . "\\Controller\\" . $controller . "Controller";
-
+		
 		if (static::checkClass ( $className )) {
 			$clsHandler = new $className ();
 			$method = self::$_action;
