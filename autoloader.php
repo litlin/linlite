@@ -29,7 +29,7 @@ class MyAutoload {
 		if (class_exists ( $className, false )) {
 			return true;
 		}
-		if (self::$_map [$className])
+		if (isset(self::$_map [$className]))
 			return include self::$_map [$className];
 		$len = strlen ( self::$_prefix );
 		if (strncmp ( self::$_prefix, $className, $len ) === 0) {

@@ -82,7 +82,7 @@ class Bootstrap {
 			if (method_exists ( $clsHandler, $method )) {
 				$clsHandler->$method ( self::$_vars );
 			} elseif (method_exists ( $clsHandler, "_empty" )) {
-				$clsHandler::_empty ( $method );
+				$clsHandler->_empty ( $method );
 			} else {
 				exit ( "<h2>action $method not exists!</h2>" );
 			}

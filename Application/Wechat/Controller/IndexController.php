@@ -7,8 +7,8 @@ use linlite\Wechat\Model\ResponseMsg;
 
 class IndexController extends AbstractController {
 	public function index() {
-		echo "test";ini_set("display_errors", "on");
-		$this->getGetData();$this->getPostData();var_dump($this->dataFromGet);var_dump($this->dataFromPost);
+// 		echo "test";ini_set("display_errors", "on");
+// 		$this->getGetData();$this->getPostData();var_dump($this->dataFromGet);var_dump($this->dataFromPost);
 		if (isset ( $this->getGetData () ['echostr'] )) {
 			(new ResponseMsg ())->valid ( $this->dataFromGet );
 		} elseif (! empty ( $this->getPostData () )) {
