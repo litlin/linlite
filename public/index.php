@@ -12,7 +12,7 @@ require 'autoloader.php';
 
 // $str1=file_get_contents("php://input");
 // TestController::run($str1);
-
+var_dump($_SERVER [‘HTTP_APPNAME’]);
 Bootstrap::start();
 
 
