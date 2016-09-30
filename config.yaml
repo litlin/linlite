@@ -1,2 +1,2 @@
 handle:
- - rewrite: if(!is_dir() && !is_file() && path~"^(public\/)(.*)$") goto "public/index.php/$2"
+ - rewrite: if(!is_dir() && !is_file() && path~"^(.*)$") goto "public/index.php/$1"
